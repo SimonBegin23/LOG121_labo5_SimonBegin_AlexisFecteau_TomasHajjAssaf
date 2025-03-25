@@ -97,15 +97,15 @@ public class Perspective implements Subject, Serializable {
     //Sauvegarde l'état courant de la perspective dans un objet memento.
 
     public PerspectiveMemento saveState() {
-        return new PerspectiveMemento(new PerspectiveState(scale, offsetX, offsetY));
+        return new PerspectiveMemento(scale, offsetX, offsetY);
     }
 
     // Restaure l'état de la perspective à partir d'un objet memento et notifie les observateurs.
 
     public void restoreState(PerspectiveMemento persMeme) {
-        this.scale = persMeme.getState().getScale();
-        this.offsetX = persMeme.getState().getOffsetX();
-        this.offsetY = persMeme.getState().getOffsetY();
+        this.scale = persMeme.getScale();
+        this.offsetX = persMeme.getOffsetX();
+        this.offsetY = persMeme.getOffsetY();
         notifyObservers("StateRestored");
     }
 

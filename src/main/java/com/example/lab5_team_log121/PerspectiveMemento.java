@@ -1,14 +1,31 @@
 package com.example.lab5_team_log121;
 
 public class PerspectiveMemento {
-    private PerspectiveState state;
+    
+    private double scale;
+    private double offsetX;
+    private double offsetY;
 
-    public PerspectiveMemento(PerspectiveState state) {
-        this.state = state;
+    // Constructeur : initialise l'état avec l'échelle et les offsets fournis.
+    public PerspectiveMemento(double scale, double offsetX, double offsetY) {
+        this.scale = scale;
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
         
     }
 
-    public PerspectiveState getState() {
-        return state;
+     // Retourne le facteur de zoom (scale) de la perspective.
+     public double getScale() {
+        return scale;
+    }
+
+    // Retourne l'offset horizontal de la perspective.
+    public double getOffsetX() {
+        return offsetX;
+    }
+
+    // Retourne l'offset vertical de la perspective.
+    public double getOffsetY() {
+        return offsetY;
     }
 }

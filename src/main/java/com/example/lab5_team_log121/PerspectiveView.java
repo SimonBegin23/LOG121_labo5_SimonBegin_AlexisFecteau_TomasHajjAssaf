@@ -58,6 +58,7 @@ public class PerspectiveView extends StackPane implements Observer {
     //Met à jour temporairement le viewport lors d'un déplacement (pan) sans modifier définitivement le modèle.
 
     public void updatePan(double newOffsetX, double newOffsetY) {
+        
         Image img = imageModel.getImage();
         if(img == null)
             return;
@@ -77,5 +78,6 @@ public class PerspectiveView extends StackPane implements Observer {
         if(offsetY < 0) offsetY = 0;
         Rectangle2D viewport = new Rectangle2D(offsetX, offsetY, viewportWidth, viewportHeight);
         imageView.setViewport(viewport);
+
     }
 }
