@@ -27,8 +27,6 @@ public class Main extends Application {
     private ThumbnailView thumbnailView;
     private PerspectiveView perspectiveView1;
     private PerspectiveView perspectiveView2;
-    private PerspectiveController perspectiveController1;
-    private PerspectiveController perspectiveController2;
 
     // Méthode start : initialise et lance l'application JavaFX
     @Override
@@ -42,14 +40,7 @@ public class Main extends Application {
         perspectives.add(p1);
         perspectives.add(p2);
 
-        // Création des vues
-        thumbnailView = new ThumbnailView(imageModel);
-        perspectiveView1 = new PerspectiveView(imageModel, p1);
-        perspectiveView2 = new PerspectiveView(imageModel, p2);
-
-        // Création des contrôleurs pour gérer les interactions sur chaque vue de perspective
-        perspectiveController1 = new PerspectiveController(p1, perspectiveView1);
-        perspectiveController2 = new PerspectiveController(p2, perspectiveView2);
+        
 
         // Mise en page
         BorderPane root = new BorderPane();
@@ -57,6 +48,11 @@ public class Main extends Application {
 
         MenuBar menuBar = createMenuBar(primaryStage);
         root.setTop(menuBar);
+
+        // Création des vues
+        thumbnailView = new ThumbnailView(imageModel);
+        perspectiveView1 = new PerspectiveView(imageModel, new Perspective());
+        perspectiveView2 = new PerspectiveView(imageModel, new Perspective());
 
         // Disposition en trois parties :
         // - Colonne gauche (vignette) avec bordure noire
@@ -72,6 +68,8 @@ public class Main extends Application {
 
         Label creditsLabel = new Label("équipe log121 © 2025");
         leftBox.getChildren().add(creditsLabel);
+
+        
 
         HBox rightBox = new HBox(10);
         rightBox.setPadding(new Insets(10));
