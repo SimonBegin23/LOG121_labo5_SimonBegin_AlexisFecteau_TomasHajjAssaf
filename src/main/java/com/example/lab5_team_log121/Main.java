@@ -23,7 +23,6 @@ import java.util.List;
 public class Main extends Application {
 
     private ImageModel imageModel;
-    private List<Perspective> perspectives = new ArrayList<>();
     private ThumbnailView thumbnailView;
     private PerspectiveView perspectiveView1;
     private PerspectiveView perspectiveView2;
@@ -32,13 +31,6 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Application d'Affichage d'Images");
-
-        // Initialisation du modèle et création de deux perspectives par défaut
-        imageModel = new ImageModel();
-        Perspective p1 = new Perspective();
-        Perspective p2 = new Perspective();
-        perspectives.add(p1);
-        perspectives.add(p2);
 
         
 
@@ -49,6 +41,9 @@ public class Main extends Application {
         MenuBar menuBar = createMenuBar(primaryStage);
         root.setTop(menuBar);
 
+        // Initialisation du modèle de l'image
+        imageModel = new ImageModel();
+        
         // Création des vues
         thumbnailView = new ThumbnailView(imageModel);
         perspectiveView1 = new PerspectiveView(imageModel, new Perspective());
