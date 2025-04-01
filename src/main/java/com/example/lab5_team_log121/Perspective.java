@@ -57,6 +57,10 @@ public class Perspective implements Subject, Serializable {
         scale *= factor;
         offsetX = centerX - ((centerX - offsetX) * (scale / oldScale));
         offsetY = centerY - ((centerY - offsetY) * (scale / oldScale));
+
+        //ajouter l'état post-zoom à l'historique
+        PerspectiveCaretaker.getInstance().pushNewMemento(saveState());
+
         notifyObservers("ZoomChanged");
     }
 
@@ -64,6 +68,10 @@ public class Perspective implements Subject, Serializable {
     public void move(double dx, double dy) {
         this.offsetX += dx;
         this.offsetY += dy;
+
+        //ajouter l'état post-déplacement à l'historique
+        PerspectiveCaretaker.getInstance().pushNewMemento(saveState());
+
         notifyObservers("Moved");
     }
 
@@ -97,7 +105,7 @@ public class Perspective implements Subject, Serializable {
     //Sauvegarde l'état courant de la perspective dans un objet memento.
 
     public PerspectiveMemento saveState() {
-        return new PerspectiveMemento(scale, offsetX, offsetY);
+        return new PerspectiveMemento(scale, offsetX, offsetY, this);
     }
 
     // Restaure l'état de la perspective à partir d'un objet memento et notifie les observateurs.
