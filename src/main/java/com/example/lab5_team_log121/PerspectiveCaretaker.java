@@ -75,4 +75,8 @@ public class PerspectiveCaretaker {
         }
         
     }
+
+    public void flushHistory(){
+        history.removeAllElements();
+    }
 }

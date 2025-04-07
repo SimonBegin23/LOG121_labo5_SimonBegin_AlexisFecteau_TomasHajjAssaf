@@ -17,8 +17,10 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,15 +36,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Application d'Affichage d'Images");
 
-        
-
-        // Mise en page
-        BorderPane root = new BorderPane();
-        root.setPadding(new Insets(10));
-
-        MenuBar menuBar = createMenuBar(primaryStage);
-        root.setTop(menuBar);
-
         // Initialisation du modèle de l'image
         imageModel = new ImageModel();
         
@@ -50,6 +43,13 @@ public class Main extends Application {
         thumbnailView = new ThumbnailView(imageModel);
         perspectiveView1 = new PerspectiveView(imageModel, new Perspective());
         perspectiveView2 = new PerspectiveView(imageModel, new Perspective());
+
+        // Mise en page
+        BorderPane root = new BorderPane();
+        root.setPadding(new Insets(10));
+
+        MenuBar menuBar = createMenuBar(primaryStage);
+        root.setTop(menuBar);
 
         // Disposition en trois parties :
         // - Colonne gauche (vignette) avec bordure noire
@@ -95,11 +95,52 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Ouvrir une image");
-                fileChooser.getExtensionFilters().addAll(
-                        new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
+
+                //Choix pour ouvrir une image
+                fileChooser.getExtensionFilters().add(
+                        new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.ser")
                 );
+
+                //Choix pour ouvrir un fichier .per sauvegardé auparavant
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Perspectives sérialisées", "*.ser"));
+
+                //Sélectionner un fichier à charger
                 File file = fileChooser.showOpenDialog(stage);
-                if (file != null) {
+                String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
+
+                //charger une sauvegarde .per
+                if (extension.equalsIgnoreCase("ser")){
+                    try{
+                        FileInputStream fis = new FileInputStream(file);
+                        ObjectInputStream ois = new ObjectInputStream(fis);
+
+                        imageModel.loadImage((String) ois.readObject());
+                        
+                        PerspectiveMemento memento1 = (PerspectiveMemento)ois.readObject();
+                        PerspectiveMemento memento2 = (PerspectiveMemento)ois.readObject();
+
+                        perspectiveView1.getPerspective().restoreState(memento1);
+                        perspectiveView2.getPerspective().restoreState(memento2);
+
+                        //réinitialiser l'historique à la sauvegarde chargée
+                        PerspectiveCaretaker caretaker = PerspectiveCaretaker.getInstance();
+                        caretaker.flushHistory();
+                        caretaker.pushNewMemento(memento1);
+                        caretaker.pushNewMemento(memento2);
+                        
+                        ois.close();
+                        fis.close();
+
+                        System.out.println("Fichier chargé avec succès!");
+
+
+                    } catch (Exception e){
+                        System.out.println("Erreur de charge!");
+                        System.out.println(e.getMessage());
+                    }
+
+                } else if (file != null) {
+                    //charger une image
                     imageModel.loadImage(file.getAbsolutePath());
                 }
             }
@@ -113,7 +154,7 @@ public class Main extends Application {
                 //choisir emplacement de la sauvegarde
                 FileChooser fileChooser = new FileChooser();
                 fileChooser.setTitle("Sauvegarder l'état des vues");
-                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Perspectives", "*.per"));
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Perspectives sérialisées", "*.ser"));
                 File file = fileChooser.showSaveDialog(stage);
                 
                 try{
@@ -121,14 +162,14 @@ public class Main extends Application {
                     ObjectOutputStream oos = new ObjectOutputStream(fos);
 
                     //sauvegarder l'image et un mémento de chaque perspective
-                    oos.writeObject(imageModel);
+                    oos.writeObject(imageModel.getImagePath());
                     oos.writeObject(perspectiveView1.getPerspective().saveState());
                     oos.writeObject(perspectiveView2.getPerspective().saveState());
 
                     //fermer les chaînes de sauvegarde
                     oos.close();
                     fos.close();
-                    System.out.println("Fichier Enregistré avec succès!");
+                    System.out.println("Fichier enregistré avec succès!");
                 } catch (Exception e) {
 
                 }

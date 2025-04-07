@@ -1,6 +1,6 @@
 package com.example.lab5_team_log121;
 
-public class PerspectiveMemento {
+public class PerspectiveMemento implements java.io.Serializable {
 
     private Perspective originator;
     private double scale;
