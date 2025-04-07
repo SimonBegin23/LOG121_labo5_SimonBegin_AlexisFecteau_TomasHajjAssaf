@@ -17,6 +17,8 @@ import javafx.stage.Stage;
 import javafx.scene.control.Label;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,6 +87,8 @@ public class Main extends Application {
     private MenuBar createMenuBar(Stage stage) {
         MenuBar menuBar = new MenuBar();
         Menu menuFile = new Menu("Fichier");
+
+        //bouton ouvrir
         MenuItem openItem = new MenuItem("Ouvrir");
         openItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -100,7 +104,40 @@ public class Main extends Application {
                 }
             }
         });
+
+        //bouton sauvegarder
+        MenuItem saveItem = new MenuItem("Sauvegarder");
+        saveItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event){
+                //choisir emplacement de la sauvegarde
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("Sauvegarder l'état des vues");
+                fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Perspectives", "*.per"));
+                File file = fileChooser.showSaveDialog(stage);
+                
+                try{
+                    FileOutputStream fos = new FileOutputStream(file);
+                    ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+                    //sauvegarder l'image et un mémento de chaque perspective
+                    oos.writeObject(imageModel);
+                    oos.writeObject(perspectiveView1.getPerspective().saveState());
+                    oos.writeObject(perspectiveView2.getPerspective().saveState());
+
+                    //fermer les chaînes de sauvegarde
+                    oos.close();
+                    fos.close();
+                    System.out.println("Fichier Enregistré avec succès!");
+                } catch (Exception e) {
+
+                }
+
+            }
+        });
+
         menuFile.getItems().add(openItem);
+        menuFile.getItems().add(saveItem);
         menuBar.getMenus().add(menuFile);
         return menuBar;
     }
