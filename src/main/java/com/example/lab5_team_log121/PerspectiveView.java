@@ -30,6 +30,9 @@ public class PerspectiveView extends StackPane implements Observer {
         imageModel.attach(this);
         update(null, "Init");
         this.attachHandlers();
+
+        //ajouter l'état initial de la vue à l'historique
+        PerspectiveCaretaker.getInstance().pushNewMemento(perspective.saveState());
     }
 
     // Retourne l'ImageView utilisé pour afficher la perspective.
