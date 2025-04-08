@@ -98,7 +98,7 @@ public class Main extends Application {
 
                 //Choix pour ouvrir une image
                 fileChooser.getExtensionFilters().add(
-                        new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif", "*.ser")
+                        new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg", "*.gif")
                 );
 
                 //Choix pour ouvrir un fichier .per sauvegardé auparavant
@@ -106,43 +106,47 @@ public class Main extends Application {
 
                 //Sélectionner un fichier à charger
                 File file = fileChooser.showOpenDialog(stage);
-                String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
 
-                //charger une sauvegarde .per
-                if (extension.equalsIgnoreCase("ser")){
-                    try{
-                        FileInputStream fis = new FileInputStream(file);
-                        ObjectInputStream ois = new ObjectInputStream(fis);
+                if (file != null){
+                    String extension = file.getName().substring(file.getName().lastIndexOf(".")+1);
 
-                        imageModel.loadImage((String) ois.readObject());
-                        
-                        PerspectiveMemento memento1 = (PerspectiveMemento)ois.readObject();
-                        PerspectiveMemento memento2 = (PerspectiveMemento)ois.readObject();
+                    //charger une sauvegarde .per
+                    if (extension.equalsIgnoreCase("ser")){
+                        try{
+                            FileInputStream fis = new FileInputStream(file);
+                            ObjectInputStream ois = new ObjectInputStream(fis);
 
-                        perspectiveView1.getPerspective().restoreState(memento1);
-                        perspectiveView2.getPerspective().restoreState(memento2);
+                            imageModel.loadImage((String) ois.readObject());
+                            
+                            PerspectiveMemento memento1 = (PerspectiveMemento)ois.readObject();
+                            PerspectiveMemento memento2 = (PerspectiveMemento)ois.readObject();
 
-                        //réinitialiser l'historique à la sauvegarde chargée
-                        PerspectiveCaretaker caretaker = PerspectiveCaretaker.getInstance();
-                        caretaker.flushHistory();
-                        caretaker.pushNewMemento(memento1);
-                        caretaker.pushNewMemento(memento2);
-                        
-                        ois.close();
-                        fis.close();
+                            perspectiveView1.getPerspective().restoreState(memento1);
+                            perspectiveView2.getPerspective().restoreState(memento2);
 
-                        System.out.println("Fichier chargé avec succès!");
+                            //réinitialiser l'historique à la sauvegarde chargée
+                            PerspectiveCaretaker caretaker = PerspectiveCaretaker.getInstance();
+                            caretaker.flushHistory();
+                            caretaker.pushNewMemento(memento1);
+                            caretaker.pushNewMemento(memento2);
+                            
+                            ois.close();
+                            fis.close();
+
+                            System.out.println("Fichier chargé avec succès!");
 
 
-                    } catch (Exception e){
-                        System.out.println("Erreur de charge!");
-                        System.out.println(e.getMessage());
+                        } catch (Exception e){
+                            System.out.println("Erreur de charge!");
+                            System.out.println(e.getMessage());
+                        }
+
+                    } else {
+                        //charger une image
+                        imageModel.loadImage(file.getAbsolutePath());
                     }
-
-                } else if (file != null) {
-                    //charger une image
-                    imageModel.loadImage(file.getAbsolutePath());
                 }
+            
             }
         });
 
