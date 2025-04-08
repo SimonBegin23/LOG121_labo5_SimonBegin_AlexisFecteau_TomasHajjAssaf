@@ -40,6 +40,10 @@ public class PerspectiveView extends StackPane implements Observer {
         return imageView;
     }
 
+    public Perspective getPerspective(){
+        return perspective;
+    }
+
     // Méthode update : met à jour l'affichage de l'ImageView en fonction de l'état actuel du modèle et de la perspective.
     @Override
     public void update(Subject subject, Object arg) {
