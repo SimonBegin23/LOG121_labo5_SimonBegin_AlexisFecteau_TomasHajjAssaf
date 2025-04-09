@@ -162,6 +162,18 @@ public class Main extends Application {
                     } else {
                         //charger une image
                         imageModel.loadImage(file.getAbsolutePath());
+
+                        //réinitialiser la vue à un état neutre
+                        PerspectiveMemento memento1 = new PerspectiveMemento(1, 0, 0, perspectiveView1.getPerspective());
+                        PerspectiveMemento memento2 = new PerspectiveMemento(1, 0, 0, perspectiveView2.getPerspective());
+                        perspectiveView1.getPerspective().restoreState(memento1);;
+                        perspectiveView2.getPerspective().restoreState(memento2);
+                        
+                        //réinitialiser l'historique
+                        PerspectiveCaretaker caretaker = PerspectiveCaretaker.getInstance();
+                        caretaker.flushHistory();
+                        caretaker.pushNewMemento(memento1);
+                        caretaker.pushNewMemento(memento2);
                     }
                 }
             
