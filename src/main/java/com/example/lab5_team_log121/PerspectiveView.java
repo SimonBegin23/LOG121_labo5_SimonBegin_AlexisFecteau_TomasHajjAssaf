@@ -74,14 +74,6 @@ public class PerspectiveView extends StackPane implements Observer {
         double viewportHeight = viewHeight * perspective.getScale();
         double offsetX = perspective.getOffsetX();
         double offsetY = perspective.getOffsetY();
-        if(offsetX + viewportWidth > img.getWidth()) {
-            offsetX = img.getWidth() - viewportWidth;
-        }
-        if(offsetY + viewportHeight > img.getHeight()) {
-            offsetY = img.getHeight() - viewportHeight;
-        }
-        if(offsetX < 0) offsetX = 0;
-        if(offsetY < 0) offsetY = 0;
         Rectangle2D viewport = new Rectangle2D(offsetX, offsetY, viewportWidth, viewportHeight);
         imageView.setViewport(viewport);
     }
@@ -99,14 +91,6 @@ public class PerspectiveView extends StackPane implements Observer {
         double viewportHeight = viewHeight * perspective.getScale();
         double offsetX = newOffsetX;
         double offsetY = newOffsetY;
-        if(offsetX + viewportWidth > img.getWidth()) {
-            offsetX = img.getWidth() - viewportWidth;
-        }
-        if(offsetY + viewportHeight > img.getHeight()) {
-            offsetY = img.getHeight() - viewportHeight;
-        }
-        if(offsetX < 0) offsetX = 0;
-        if(offsetY < 0) offsetY = 0;
         Rectangle2D viewport = new Rectangle2D(offsetX, offsetY, viewportWidth, viewportHeight);
         imageView.setViewport(viewport);
 
