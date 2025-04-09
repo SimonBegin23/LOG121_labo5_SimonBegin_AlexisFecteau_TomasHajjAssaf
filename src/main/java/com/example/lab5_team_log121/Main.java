@@ -211,8 +211,31 @@ public class Main extends Application {
             }
         });
 
+        MenuItem undoItem = new MenuItem("Annuler");
+        undoItem.setAccelerator(KeyCombination.keyCombination("Ctrl+Z"));
+        undoItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Appeler la méthode d'annulation de l'historique
+                HistoryController historyController = new HistoryController(new UndoCommand(), new RedoCommand());
+                historyController.callUndo();
+            }
+        });
+        MenuItem redoItem = new MenuItem("Rétablir");
+        redoItem.setAccelerator(KeyCombination.keyCombination("Ctrl+Y"));
+        redoItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Appeler la méthode de rétablissement de l'historique
+                HistoryController historyController = new HistoryController(new UndoCommand(), new RedoCommand());
+                historyController.callRedo();
+            }
+        });
+
         menuFile.getItems().add(openItem);
         menuFile.getItems().add(saveItem);
+        menuFile.getItems().add(undoItem);
+        menuFile.getItems().add(redoItem);
         menuBar.getMenus().add(menuFile);
         return menuBar;
     }
