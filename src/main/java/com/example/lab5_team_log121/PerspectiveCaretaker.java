@@ -53,10 +53,9 @@ public class PerspectiveCaretaker {
                 Perspective originator = currentMemento.getOriginator();
                 originator.restoreState(currentMemento);
                 System.out.println("État restauré");
+            } else {
+                System.out.println("Aucun état à restaurer");
             }
-        }
-        if (currentMemento == history.peek()){
-            System.out.println("Aucun état à restaurer");
         }
     }
 
