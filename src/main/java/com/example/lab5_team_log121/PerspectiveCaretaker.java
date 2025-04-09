@@ -24,18 +24,28 @@ public class PerspectiveCaretaker {
     public void undoCurrent() {
         
         if (!history.isEmpty() && currentMemento != null) {
-            //reculer au mémento précédent sans dépiler le stack
-            int indicePrecedent = history.indexOf(currentMemento) -1;
-            if (indicePrecedent > 0){
+
+            int indicePrecedent = history.indexOf(currentMemento)-1;
+            if (indicePrecedent > 0 ){
+
+                //sauvegarder l'état actuel si une modification vient juste d'être faite
+                if (currentMemento == history.lastElement()){
+                    pushNewMemento(currentMemento.getOriginator().saveState());
+                    indicePrecedent++;
+                }
+
+                //reculer au mémento précédent sans dépiler le stack
                 currentMemento = history.get(indicePrecedent);
 
                 //rétablir la perspective affectée 
                 Perspective originator = currentMemento.getOriginator();
                 originator.restoreState(currentMemento);
                 System.out.println("Annulation éffectuée");
+
             } else {
                 System.out.println("Vous êtes à l'état initial");
-            }
+            }        
+            
         }
         if (history.isEmpty()) {
             System.out.println("Aucun état à annuler");

@@ -53,25 +53,27 @@ public class Perspective implements Subject, Serializable {
 
     // Applique un zoom en modifiant l'échelle et ajuste l'offset pour conserver le point central
     public void zoom(double factor, double centerX, double centerY) {
+
+        //ajouter l'état pré-zoom à l'historique
+        PerspectiveCaretaker.getInstance().pushNewMemento(this.saveState());
+
+        //zoomer la perspective
         double oldScale = scale;
         scale *= factor;
         offsetX = centerX - ((centerX - offsetX) * (scale / oldScale));
         offsetY = centerY - ((centerY - offsetY) * (scale / oldScale));
-
-        //ajouter l'état post-zoom à l'historique
-        PerspectiveCaretaker.getInstance().pushNewMemento(saveState());
-
         notifyObservers("ZoomChanged");
     }
 
     // Effectue une translation en ajustant les offsets selon les valeurs fournies.
     public void move(double dx, double dy) {
+
+        //ajouter l'état pré-déplacement à l'historique
+        PerspectiveCaretaker.getInstance().pushNewMemento(this.saveState());
+
+        //déplacer la perspective
         this.offsetX += dx;
         this.offsetY += dy;
-
-        //ajouter l'état post-déplacement à l'historique
-        PerspectiveCaretaker.getInstance().pushNewMemento(saveState());
-
         notifyObservers("Moved");
     }
 

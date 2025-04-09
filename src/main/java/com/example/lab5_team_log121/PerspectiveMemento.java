@@ -33,6 +33,6 @@ public class PerspectiveMemento implements java.io.Serializable {
 
     //retourne la perspective ayant créé le mémento.
     public Perspective getOriginator(){
-        return originator;
+        return this.originator;
     }
 }
