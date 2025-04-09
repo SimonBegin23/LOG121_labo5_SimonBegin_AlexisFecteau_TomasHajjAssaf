@@ -1,9 +1,23 @@
 package com.example.lab5_team_log121;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.Base64;
+
 import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
@@ -17,6 +31,8 @@ public class PerspectiveView extends StackPane implements Observer {
     private double dragStartX, dragStartY;
     private double initialOffsetX, initialOffsetY;
 
+    final ContextMenu contextMenu = new ContextMenu();
+
     // Constructeur : initialise la vue de perspective, configure l'ImageView et attache les observateurs.
     public PerspectiveView(ImageModel imageModel, Perspective perspective) {
         this.imageModel = imageModel;
@@ -28,6 +44,7 @@ public class PerspectiveView extends StackPane implements Observer {
         this.getChildren().add(imageView);
         perspective.attach(this);
         imageModel.attach(this);
+        this.attachContextMenu();
         update(null, "Init");
         this.attachHandlers();
 
@@ -140,5 +157,82 @@ public class PerspectiveView extends StackPane implements Observer {
                 perspective.move(-dx, -dy);
             }
         });
+
+        // Gestionnaire d'évènement: ouvrir le menu de contexte avec clic droit.
+        this.getImageView().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    PerspectiveView.this.contextMenu.show(imageView, event.getScreenX(), event.getScreenY());
+                }
+            }
+            
+        });
+    }
+
+
+    private void attachContextMenu(){
+        MenuItem copier = new MenuItem("Copier");
+        MenuItem coller = new MenuItem("Coller");
+
+        //initier le bouton copier
+        copier.setOnAction(event -> {
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+
+            try{
+                //sérialiser un nouveau mémento sous forme binaire
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos);
+                oos.writeObject(perspective.saveState());
+                oos.close();
+
+                //encoder le binaire en String base64
+                byte[] binaire = bos.toByteArray();
+                String binaireEncode = Base64.getEncoder().encodeToString(binaire);
+
+                //copier le string au clipboard
+                content.putString(binaireEncode);
+                clipboard.setContent(content);
+                System.out.println("Copié avec succès!");
+
+            } catch (Exception e){
+                System.out.println("Erreur de copiage!");
+                System.out.println(e.getMessage());
+            }
+        });
+
+        //initier le bouton coller
+        coller.setOnAction(event ->{
+            final Clipboard clipboard = Clipboard.getSystemClipboard();
+
+            if (clipboard.hasString()){
+                try{
+                    //décoder le string base64 du clipboard en forme binaire
+                    byte[] binaire = Base64.getDecoder().decode(clipboard.getString());
+
+                    //convertir le binaire en objet de PerspectiveMemento
+                    ByteArrayInputStream bis = new ByteArrayInputStream(binaire);
+                    ObjectInputStream ois = new ObjectInputStream(bis);
+                    PerspectiveMemento mementoColle = (PerspectiveMemento)ois.readObject();
+
+                    //restaurer le mémento collé et l'ajouter à l'historique
+                    perspective.restoreState(mementoColle);
+                    PerspectiveCaretaker.getInstance().pushNewMemento(mementoColle);
+
+                    System.out.println("Collé avec succès!");
+
+                } catch (Exception e){
+                    System.out.println("Erreur de collage!");
+                    System.out.println(e.getMessage());
+                }
+                
+            } else {
+                System.out.println("Presse-papiers vide ou impossible à coller!");
+            }
+        });
+
+        //ajouter les boutons au menu
+        this.contextMenu.getItems().addAll(copier, coller);   
     }
 }
