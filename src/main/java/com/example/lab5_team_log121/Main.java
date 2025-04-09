@@ -81,20 +81,18 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show(); 
         
+        Command undoCommand = new UndoCommand();
+        Command redoCommand = new RedoCommand();
+
         Button undoButton = new Button("Undo");
         Button redoButton = new Button("Redo");
-        
-        undoButton.setOnAction(e -> {
-            PerspectiveCaretaker.getInstance().undoCurrent();
-        });
-        
-        redoButton.setOnAction(e -> {
-            PerspectiveCaretaker.getInstance().redoNext();
-        });
-        
+
+        undoButton.setOnAction(e -> undoCommand.execute());
+        redoButton.setOnAction(e -> redoCommand.execute());
+
         HBox buttonBox = new HBox(10, undoButton, redoButton);
         leftBox.getChildren().add(buttonBox);
-        
+
     }
 
     // Méthode createMenuBar : crée et retourne la barre de menu de l'application
