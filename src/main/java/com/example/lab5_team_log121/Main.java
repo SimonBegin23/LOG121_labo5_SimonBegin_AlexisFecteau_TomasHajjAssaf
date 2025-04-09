@@ -14,7 +14,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.scene.control.Label;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -80,7 +79,22 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 1000, 600);
         primaryStage.setScene(scene);
-        primaryStage.show();
+        primaryStage.show(); 
+        
+        Button undoButton = new Button("Undo");
+        Button redoButton = new Button("Redo");
+        
+        undoButton.setOnAction(e -> {
+            PerspectiveCaretaker.getInstance().undoCurrent();
+        });
+        
+        redoButton.setOnAction(e -> {
+            PerspectiveCaretaker.getInstance().redoNext();
+        });
+        
+        HBox buttonBox = new HBox(10, undoButton, redoButton);
+        leftBox.getChildren().add(buttonBox);
+        
     }
 
     // Méthode createMenuBar : crée et retourne la barre de menu de l'application
