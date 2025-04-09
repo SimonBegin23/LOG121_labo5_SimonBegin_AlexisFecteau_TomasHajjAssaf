@@ -62,10 +62,26 @@ public class Main extends Application {
         VBox.setVgrow(spacer, Priority.ALWAYS);
         leftBox.getChildren().add(spacer);
 
+        //initier le contrôleur d'historique
+        HistoryController historyController = new HistoryController(new UndoCommand(), new RedoCommand());
+
+        //associer deux boutons au contrôleur d'historique
+        Button undoButton = new Button("Undo");
+        Button redoButton = new Button("Redo");
+        undoButton.setFocusTraversable(false);
+        redoButton.setFocusTraversable(false);
+        undoButton.setOnAction(e -> historyController.callUndo());
+        redoButton.setOnAction(e -> historyController.callRedo());
+
+            //D'autres interfaces pourraient appeler le même contrôleur d'historique (ex. si on ajoute ctrl-z et ctrl-y)
+
+        HBox buttonBox = new HBox(10, undoButton, redoButton); 
+        leftBox.getChildren().add(buttonBox);
+
+
         Label creditsLabel = new Label("équipe log121 © 2025");
         leftBox.getChildren().add(creditsLabel);
 
-        
 
         HBox rightBox = new HBox(10);
         rightBox.setPadding(new Insets(10));
@@ -79,19 +95,9 @@ public class Main extends Application {
 
         Scene scene = new Scene(root, 1000, 600);
         primaryStage.setScene(scene);
-        primaryStage.show(); 
+        primaryStage.show();
+
         
-        Command undoCommand = new UndoCommand();
-        Command redoCommand = new RedoCommand();
-
-        Button undoButton = new Button("Undo");
-        Button redoButton = new Button("Redo");
-
-        undoButton.setOnAction(e -> undoCommand.execute());
-        redoButton.setOnAction(e -> redoCommand.execute());
-
-        HBox buttonBox = new HBox(10, undoButton, redoButton);
-        leftBox.getChildren().add(buttonBox);
 
     }
 

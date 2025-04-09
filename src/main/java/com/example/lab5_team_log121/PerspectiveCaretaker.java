@@ -33,6 +33,8 @@ public class PerspectiveCaretaker {
                 Perspective originator = currentMemento.getOriginator();
                 originator.restoreState(currentMemento);
                 System.out.println("Annulation éffectuée");
+            } else {
+                System.out.println("Vous êtes à l'état initial");
             }
         }
         if (history.isEmpty()) {
