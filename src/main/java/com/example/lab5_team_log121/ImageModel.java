@@ -1,14 +1,10 @@
 package com.example.lab5_team_log121;
 
 import javafx.scene.image.Image;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImageModel implements Subject, Serializable {
-    private static final long serialVersionUID = 1L;
+public class ImageModel implements Subject {
 
     private String imagePath;
     private transient Image image; // On sauvegarde seulement le chemin

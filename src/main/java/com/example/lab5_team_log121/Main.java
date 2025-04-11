@@ -20,8 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main extends Application {
 
@@ -29,6 +27,7 @@ public class Main extends Application {
     private ThumbnailView thumbnailView;
     private PerspectiveView perspectiveView1;
     private PerspectiveView perspectiveView2;
+    private HistoryController historyController = new HistoryController(new UndoCommand(), new RedoCommand());
 
     // Méthode start : initialise et lance l'application JavaFX
     @Override
@@ -61,9 +60,6 @@ public class Main extends Application {
         Region spacer = new Region();
         VBox.setVgrow(spacer, Priority.ALWAYS);
         leftBox.getChildren().add(spacer);
-
-        //initier le contrôleur d'historique
-        HistoryController historyController = new HistoryController(new UndoCommand(), new RedoCommand());
 
         //associer deux boutons au contrôleur d'historique
         Button undoButton = new Button("Undo");
@@ -217,7 +213,6 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 // Appeler la méthode d'annulation de l'historique
-                HistoryController historyController = new HistoryController(new UndoCommand(), new RedoCommand());
                 historyController.callUndo();
             }
         });
@@ -227,7 +222,6 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 // Appeler la méthode de rétablissement de l'historique
-                HistoryController historyController = new HistoryController(new UndoCommand(), new RedoCommand());
                 historyController.callRedo();
             }
         });
