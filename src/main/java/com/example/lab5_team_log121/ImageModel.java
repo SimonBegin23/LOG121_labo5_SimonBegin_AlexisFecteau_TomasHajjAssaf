@@ -1,6 +1,8 @@
 package com.example.lab5_team_log121;
 
 import javafx.scene.image.Image;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
