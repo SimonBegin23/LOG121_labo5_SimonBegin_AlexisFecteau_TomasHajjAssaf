@@ -1,6 +1,7 @@
 package com.example.lab5_team_log121;
 
 public class PerspectiveMemento implements java.io.Serializable {
+    private static final long serialVersionUID = 1L;
 
     private Perspective originator;
     private double scale;

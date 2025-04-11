@@ -5,9 +5,7 @@ import java.util.Stack;
 public class PerspectiveCaretaker {
 
     private Stack<PerspectiveMemento> history;
-
     private static PerspectiveCaretaker instance;
-
     private PerspectiveMemento currentMemento;
 
     private PerspectiveCaretaker(){

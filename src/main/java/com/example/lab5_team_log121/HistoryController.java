@@ -2,11 +2,11 @@ package com.example.lab5_team_log121;
 
 public class HistoryController{
 
-    //HistoryController devrait, en théorie, gérer les boutons undo et redo sur l'interface graphique.
-    //Deux boutons, dont chacun lance une commande.
+    //HistoryController devrait, en théorie, gérer les fonctions undo et redo sur l'interface graphique.
+    //Plusieurs interfaces peuvent s'y connecter tant qu'elles ont les mêmes fonctions undo et redo
 
-    private Command undo = new UndoCommand();
-    private Command redo = new RedoCommand();
+    private Command undo;
+    private Command redo;
 
     public HistoryController(Command undo, Command redo){
         this.undo = undo;
