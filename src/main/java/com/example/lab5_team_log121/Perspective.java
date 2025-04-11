@@ -1,13 +1,9 @@
 package com.example.lab5_team_log121;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Perspective implements Subject, Serializable {
-    private static final long serialVersionUID = 1L;
+public class Perspective implements Subject {
 
     private double scale;   // Zoom (1.0 = 100%)
     private double offsetX; // Décalage horizontal
@@ -117,11 +113,5 @@ public class Perspective implements Subject, Serializable {
         this.offsetX = persMeme.getOffsetX();
         this.offsetY = persMeme.getOffsetY();
         notifyObservers("StateRestored");
-    }
-
-    // Méthode de désérialisation pour réinitialiser la liste des observateurs.
-    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        observers = new ArrayList<>();
     }
 }
