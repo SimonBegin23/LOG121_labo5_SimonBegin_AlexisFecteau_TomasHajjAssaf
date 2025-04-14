@@ -24,7 +24,7 @@ public class PerspectiveCaretaker {
         if (!history.isEmpty() && currentMemento != null) {
 
             int indicePrecedent = history.indexOf(currentMemento)-1;
-            if (indicePrecedent > 0 ){
+            if (indicePrecedent > 0){
 
                 //sauvegarder l'état actuel si une modification vient juste d'être faite
                 if (currentMemento == history.lastElement()){
